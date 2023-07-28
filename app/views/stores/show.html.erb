@@ -1,0 +1,18 @@
+<h1><%= @store.name %></h1>
+<% if @items.present? %>
+  <ul>
+    <% @items.each do |item| %>
+      <li>
+        <%= item.name %> - <%= item.price %>€
+        <%= link_to "Edit", edit_item_path(item) %>
+        <%# <%= link_to "Toggle Visibility", (@store, item), method: :patch %> %>
+        <%= link_to "Destroy", item_path(item), method: :delete, data: { turbo_confirm: "Are you sure?" }, form: { "data-turbo-method": :delete } %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No items available</p>
+<% end %>
+
+<%= link_to "Add Item to Stock", new_store_item_path(@store) %>
+<%= link_to "Destroy", store_path(@store), method: :delete, data: { turbo_confirm: "Are you sure?" }, form: { "data-turbo-method": :delete } %>

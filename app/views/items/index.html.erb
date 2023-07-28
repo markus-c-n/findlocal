@@ -1,0 +1,6 @@
+<h1>LocalFind</h1>
+<% @items.each do |item| %>
+  <p>
+    <strong><%= link_to item.name, store_path(item.store) %></strong> - <%= item.price %>€ (Store: <%= item.store.name %>)
+  </p>
+<% end %>

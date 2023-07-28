@@ -1,0 +1,11 @@
+<h1>Localfind</h1>
+<h2>Stores</h2>
+
+<ol>
+
+  <% @stores.each do |store|%>
+    <li><strong><%= link_to store.name, store_path(store)%></strong> -
+    <em><%= store.address %></em>
+    <%= store.description %></li>
+  <% end %>
+</ol>

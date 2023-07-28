@@ -1,0 +1,33 @@
+<%= form_with model: @item, local: true do |form| %>
+  <div>
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+  <div>
+    <%= form.label :price %>
+    <%= form.number_field :price %>
+  </div>
+  <div>
+    <%= form.label :stock_quantity %>
+    <%= form.number_field :stock_quantity %>
+  </div>
+  <div>
+    <%= form.label :description %>
+    <%= form.text_area :description %>
+  </div>
+  <div>
+    <%= form.label :categories %>
+    <%= form.text_field :categories %>
+  </div>
+  <div>
+    <%= form.label :pictures %>
+    <%= form.text_field :pictures %>
+  </div>
+  <div>
+    <%= form.label :visible %>
+    <%= form.check_box :visible %>
+  </div>
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
