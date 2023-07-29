@@ -3,7 +3,7 @@ class ItemsController < ApplicationController
   before_action :find_item, only: [:edit, :update, :destroy]
 
   def index
-    @items = Item.includes(:store).order("RANDOM()").limit(10)
+    @items = Item.where(visible: true).includes(:store).order("RANDOM()").limit(10)
   end
 
   def new
@@ -32,12 +32,6 @@ class ItemsController < ApplicationController
 
   def show
     @item = Item.find(params[:id])
-  end
-
-  def toggle_visibility
-    @item = Item.find(params[:id])
-    @item.toggle!(:visible)
-    redirect_to store_path(@item.store)
   end
 
   def destroy

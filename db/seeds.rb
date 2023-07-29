@@ -9,74 +9,44 @@
 # db/seeds.rb
 
 # Array of categories
-CATEGORIES = ["Food & Beverages", "Home & Decor", "Art"]
+require 'faker'
 
-# Array of sample store names
-STORE_NAMES = [
-  "Tasty Treats",
-  "Cozy Home",
-  "Creative Corner",
-  "Green Thumb",
-  "Artistic Expressions",
-  "Vintage Finds",
-  "Sunny Days",
-  "The Crafty Shop",
-  "Healthy Bites",
-  "Caffeine Fix"
-]
+# Seed data for stores
+num_stores = 10
+min_items_per_store = 5
+max_items_per_store = 10
 
-# Array of real street names in Friedrichshain, Berlin
-STREETS = [
-  "Boxhagener Strasse",
-  "Simon-Dach-Strasse",
-  "Krossener Strasse",
-  "Warschauer Strasse",
-  "Frankfurter Allee",
-  "Gruenberger Strasse",
-  "Rigaer Strasse",
-  "Revaler Strasse",
-  "Grünberger Strasse",
-  "Gabriel-Max-Strasse",
-  "Wühlischstrasse"
-]
+# Seed data for items
+num_items = (num_stores * (min_items_per_store..max_items_per_store).to_a.sample).to_i
 
-# Method to create random opening times
-def random_opening_times
-  days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-  times = ["12:00-18:00", "10:00-20:00", "09:00-17:00", "11:00-19:00"]
-  days.sample(5).map { |day| "#{day}: #{times.sample}" }.join(" & ")
+# Helper method to generate a random address within Friedrichshain, Berlin
+def generate_address
+  "#{Faker::Address.street_address}, Friedrichshain, Berlin"
 end
 
-# Method to generate random items
-def generate_items(store)
-  categories = CATEGORIES.sample(rand(1..CATEGORIES.length))
-  rand(5..10).times do
-    Item.create!(
-      name: "Product #{rand(1000)}",
-      price: rand(10..100),
-      stock_quantity: rand(5..20),
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      categories: categories,
-      visible: true,
-      store: store
+# Create stores with items
+stores = []
+num_stores.times do
+  store = Store.create!(
+    name: Faker::Company.name,
+    address: generate_address,
+    opening_times: Faker::Time.between(from: DateTime.now - 1, to: DateTime.now, format: :long),
+    description: Faker::Lorem.paragraph
+  )
+
+  items_per_store = (min_items_per_store..max_items_per_store).to_a.sample
+  items_per_store.times do
+    store.items.create!(
+      name: Faker::Commerce.product_name,
+      price: Faker::Commerce.price(range: 1..100),
+      stock_quantity: Faker::Number.between(from: 1, to: 100),
+      description: Faker::Lorem.sentence,
+      categories: Faker::Commerce.department(max: 3),
+      visible: true
     )
   end
+
+  stores << store
 end
 
-# Seed stores
-10.times do
-  street = STREETS.sample
-  street_number = rand(1..100)
-  address = "#{street} #{street_number}, 10243 Berlin"
-  Store.create!(
-    name: STORE_NAMES.sample,
-    address: address,
-    opening_times: random_opening_times,
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-  )
-end
-
-# Seed items for each store
-Store.all.each do |store|
-  generate_items(store)
-end
+puts "Created #{num_stores} stores with #{num_items} items."

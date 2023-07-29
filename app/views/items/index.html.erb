@@ -1,6 +1,13 @@
 <h1>LocalFind</h1>
+<%= link_to "Add your Store", new_store_path%>
+
+<hr>
+<h2>Items near you</h2>
+
 <% @items.each do |item| %>
-  <p>
-    <strong><%= link_to item.name, store_path(item.store) %></strong> - <%= item.price %>€ (Store: <%= item.store.name %>)
-  </p>
+  <ul>
+    <li><strong><%= link_to item.name, store_path(item.store) %></strong> - <%= item.price %>€</li>
+    <li><%= item.store.name %> - <%= item.store.address %></li>
+    <li><%= item.categories %></li>
+  </ul>
 <% end %>

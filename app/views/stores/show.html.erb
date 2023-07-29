@@ -1,12 +1,14 @@
+
 <h1><%= @store.name %></h1>
+<p><%= @store.description %></p>
+<p><%= @store.address %></p>
+<%= link_to "⚙️", edit_store_path(@store) %>
+
 <% if @items.present? %>
   <ul>
     <% @items.each do |item| %>
       <li>
         <%= item.name %> - <%= item.price %>€
-        <%= link_to "Edit", edit_item_path(item) %>
-        <%# <%= link_to "Toggle Visibility", (@store, item), method: :patch %> %>
-        <%= link_to "Destroy", item_path(item), method: :delete, data: { turbo_confirm: "Are you sure?" }, form: { "data-turbo-method": :delete } %>
       </li>
     <% end %>
   </ul>
@@ -14,5 +16,22 @@
   <p>No items available</p>
 <% end %>
 
-<%= link_to "Add Item to Stock", new_store_item_path(@store) %>
-<%= link_to "Destroy", store_path(@store), method: :delete, data: { turbo_confirm: "Are you sure?" }, form: { "data-turbo-method": :delete } %>
+<h2>Admin Page</h2>
+<% if @items.present? %>
+  <ul>
+    <% @all_items.each do |item| %>
+      <li>
+        <%= item.name %> - <%= item.price %>€
+        <%= link_to "⚙️", edit_item_path(item) %>
+        <%= link_to "🗑️", item_path(item), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
+        <%= item.visible? ? "◉" : "◎" %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No items available</p>
+<% end %>
+
+<%= link_to "Add Item", new_item_path(store_id: @store.id) %>
+<%= link_to "Destroy", store_path(@store), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
+<%= link_to "Home", root_path %>

@@ -1,0 +1,26 @@
+<%= form_with(model: @item, url: items_path, method: :post) do |form| %>
+  <div class="form-group">
+    <%= form.label :name %>
+    <%= form.text_field :name, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :price %>
+    <%= form.number_field :price, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :stock_quantity %>
+    <%= form.number_field :stock_quantity, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :description %>
+    <%= form.text_area :description, class: "form-control" %>
+  </div>
+
+  <!-- Add other item attributes here as needed -->
+
+  <%= form.hidden_field :store_id, value: params[:store_id] %>
+  <%= form.submit "Create Item", class: "btn btn-primary" %>
+<% end %>
