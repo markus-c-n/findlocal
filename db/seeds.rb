@@ -21,7 +21,7 @@ num_items = (num_stores * (min_items_per_store..max_items_per_store).to_a.sample
 
 # Helper method to generate a random address within Friedrichshain, Berlin
 def generate_address
-  "#{Faker::Address.street_address}, Friedrichshain, Berlin"
+  "#{Faker::Address.full_address}"
 end
 
 # Create stores with items

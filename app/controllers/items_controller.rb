@@ -4,6 +4,12 @@ class ItemsController < ApplicationController
 
   def index
     @items = Item.where(visible: true).includes(:store).order("RANDOM()").limit(10)
+    @markers = @items.geocoded.map do |item|
+      {
+        lat: item.latitude,
+        lng: item.longitude
+      }
+    end
   end
 
   def new

@@ -19,6 +19,16 @@ class StoresController < ApplicationController
   def edit
   end
 
+  def index
+    @stores = Store.all
+    @markers = @stores.geocoded.map do |store|
+      {
+        lat: store.latitude,
+        lng: store.longitude
+      }
+    end
+  end
+
   def update
     if @store.update(store_params)
       redirect_to store_path(@store), notice: 'Item was successfully updated.'
