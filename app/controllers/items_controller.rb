@@ -3,11 +3,12 @@ class ItemsController < ApplicationController
   before_action :find_item, only: [:edit, :update, :destroy]
 
   def index
-    @items = Item.where(visible: true).includes(:store).order("RANDOM()").limit(10)
-    @markers = @items.geocoded.map do |item|
+    @items = Item.where(visible: true).includes(store: :items).order("RANDOM()").limit(10)
+    @markers = @items.flat_map(&:store).compact.uniq.map do |store|
       {
-        lat: item.latitude,
-        lng: item.longitude
+        lat: store.latitude,
+        lng: store.longitude,
+        infoWindow: render_to_string(partial: "info_window", locals: { store: store })
       }
     end
   end

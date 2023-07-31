@@ -1,37 +1,50 @@
 
-<h1><%= @store.name %></h1>
-<p><%= @store.description %></p>
-<p><%= @store.address %></p>
-<%= link_to "⚙️", edit_store_path(@store) %>
+<div class="py-10 px-20">
+  <div class="mb-5 bg-slate-100">
+    <h1 class="text-3xl text-slate-900"><%= @store.name %></h1>
+    <p><%= @store.description %></p>
+    <p><%= @store.address %></p>
+    <%= link_to "⚙️", edit_store_path(@store) %>
+  </div>
 
-<% if @items.present? %>
-  <ul>
-    <% @items.each do |item| %>
-      <li>
-        <%= item.name %> - <%= item.price %>€
-      </li>
-    <% end %>
-  </ul>
-<% else %>
-  <p>No items available</p>
-<% end %>
+  <div>
+    <div class="bg-slate-200 mb-5">
+      <p class="">Items</p>
+      <% if @items.present? %>
+        <ul>
+          <% @items.each do |item| %>
+            <li>
+              <%= item.name %> - <%= item.price %>€
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p>No items available</p>
+      <% end %>
+    </div>
 
-<h2>Admin Page</h2>
-<% if @items.present? %>
-  <ul>
-    <% @all_items.each do |item| %>
-      <li>
-        <%= item.name %> - <%= item.price %>€
-        <%= link_to "⚙️", edit_item_path(item) %>
-        <%= link_to "🗑️", item_path(item), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
-        <%= item.visible? ? "◉" : "◎" %>
-      </li>
-    <% end %>
-  </ul>
-<% else %>
-  <p>No items available</p>
-<% end %>
+    <div class="bg-slate-100 mb-5">
+      <h2>Admin Page</h2>
+      <% if @items.present? %>
+        <ul>
+          <% @all_items.each do |item| %>
+            <li>
+              <%= item.name %> - <%= item.price %>€
+              <%= link_to "⚙️", edit_item_path(item), class:"bg-slate-200 p-1 rounded-md" %>
+              <%= link_to "🗑️", item_path(item), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class:"bg-slate-200 p-1 rounded-md" %>
+              <%= item.visible? ? "◉" : "◎" %>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p>No items available</p>
+      <% end %>
+    </div>
 
-<%= link_to "Add Item", new_item_path(store_id: @store.id) %>
-<%= link_to "Destroy", store_path(@store), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
-<%= link_to "Home", root_path %>
+    <div>
+      <%= link_to "Add Item", new_item_path(store_id: @store.id), class:"bg-emerald-600 p-2 rounded-md text-slate-100"%>
+      <%= link_to "Delete Store", store_path(@store), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class:"bg-emerald-600 p-2 rounded-md text-slate-100" %>
+      <%= link_to "Home", root_path, class:"bg-emerald-600 p-2 rounded-md text-slate-100" %>
+    </div>
+  </div>
+</div>

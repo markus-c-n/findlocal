@@ -3,10 +3,31 @@
 
 <hr>
 <h2>Items near you</h2>
-<div style="width: 100%; height: 600px;"
-  data-controller="map"
-  data-map-markers-value="<%= @markers.to_json %>"
-  data-map-api-key-value="<%= ENV['MAPBOX_API_KEY'] %>"></div>
+<div id="map" style="height: 500px;"></div>
+
+<% content_for :javascript do %>
+  <script>
+    mapboxgl.accessToken = ENV['MAPBOX_API_KEY']; // Replace this with your Mapbox access token
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v11', // Replace this with your desired map style
+      center: [13.4318, 52.5125], // Set a default center for the map (Friedrichshain, Berlin)
+      zoom: 12 // Set a default zoom level
+    });
+
+    const markers = <%= @markers.to_json.html_safe %>;
+
+    markers.forEach((marker) => {
+      const popup = new mapboxgl.Popup().setHTML(marker.infoWindow);
+
+      new mapboxgl.Marker()
+        .setLngLat([marker.lng, marker.lat])
+        .setPopup(popup)
+        .addTo(map);
+    });
+  </script>
+<% end %>
+
 
 <% @items.each do |item| %>
   <ul>
