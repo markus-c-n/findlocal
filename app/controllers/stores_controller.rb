@@ -3,6 +3,7 @@ class StoresController < ApplicationController
   before_action :find_store, only: [:edit, :show, :update, :destroy]
 
   def show
+    @store = Store.find(params[:id])
     @items = @store.items.where(visible: true)
     @all_items = @store.items
   end

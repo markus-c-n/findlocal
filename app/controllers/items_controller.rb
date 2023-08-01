@@ -4,11 +4,19 @@ class ItemsController < ApplicationController
 
   def index
     @items = Item.where(visible: true).includes(store: :items).order("RANDOM()").limit(10)
-    @markers = @items.flat_map(&:store).compact.uniq.map do |store|
+    if params[:query].present?
+      sql_subquery = <<~SQL
+        items.name @@ :query
+        OR items.categories @@ :query
+      SQL
+      @items = @items.joins(:store).where(sql_subquery, query: params[:query])
+    end
+    @markers = @items.flat_map do |item|
       {
-        lat: store.latitude,
-        lng: store.longitude,
-        infoWindow: render_to_string(partial: "info_window", locals: { store: store })
+        lat: item.store.latitude,
+        lng: item.store.longitude,
+        info_window_html: render_to_string(partial: "info_window", locals: { store: item.store, item: item }),
+        marker_html: render_to_string(partial: "marker", locals: { item: item })
       }
     end
   end

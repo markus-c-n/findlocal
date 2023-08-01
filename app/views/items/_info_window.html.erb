@@ -1,4 +1,6 @@
-<div>
-  <h4><%= store.name %></h4>
+<div class="p-1">
+  <p class="text-xl"><%= item.name %></p>
+  <p><%= item.price %>€</p>
+  <li><strong><%= link_to store.name, store_path(item.store) %></strong> - <%= item.price %>€</li>
   <p><%= store.address %></p>
 </div>
