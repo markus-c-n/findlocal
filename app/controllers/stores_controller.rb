@@ -6,6 +6,11 @@ class StoresController < ApplicationController
     @store = Store.find(params[:id])
     @items = @store.items.where(visible: true)
     @all_items = @store.items
+    @markers = [{
+      lat: @store.latitude,
+      lng: @store.longitude,
+      marker_html: render_to_string(partial: "marker", locals: { store: @store })
+    }]
   end
 
   def destroy

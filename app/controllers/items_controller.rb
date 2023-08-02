@@ -8,6 +8,7 @@ class ItemsController < ApplicationController
       sql_subquery = <<~SQL
         items.name @@ :query
         OR items.categories @@ :query
+        OR items.description @@ :query
       SQL
       @items = @items.joins(:store).where(sql_subquery, query: params[:query])
     end

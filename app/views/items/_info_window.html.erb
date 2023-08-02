@@ -1,6 +1,12 @@
-<div class="p-1">
-  <p class="text-xl"><%= item.name %></p>
-  <p><%= item.price %>€</p>
-  <li><strong><%= link_to store.name, store_path(item.store) %></strong> - <%= item.price %>€</li>
-  <p><%= store.address %></p>
+<div class="px-1 rounded-md text-lime-700">
+  <ul>
+    <li class="text-xl"><%= link_to store.name, store_path(item.store) %></li>
+    <li><%= store.address %></li><hr>
+    <li class="text-lg"><%= item.name %> | <%= item.price %>€</li>
+    <li><%= item.description %></li>
+    <li class="text-slate-50 bg-green-500 w-fit px-1 rounded-md mb-1"><%= item.categories %></li><hr>
+    <li>Similar items:
+    <ul>
+    <li><%= item.store.items.first.name %></li></ul></li>
+  </ul>
 </div>
