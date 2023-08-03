@@ -1,6 +1,7 @@
 # app/controllers/stores_controller.rb
 class StoresController < ApplicationController
   before_action :find_store, only: [:edit, :show, :update, :destroy]
+  before_action :authenticate_user!, except: [:index, :show]
 
   def show
     @store = Store.find(params[:id])
@@ -14,19 +15,23 @@ class StoresController < ApplicationController
   end
 
   def destroy
+    @store = Store.find(params[:id])
+    authorize @store
     @store.destroy
     redirect_to items_path, status: :see_other
   end
 
   def new
-    @store = Store.new
+    @store = current_user.stores.build
   end
 
   def edit
+    @store = Store.find(params[:id])
+    authorize @store
   end
 
   def index
-    @stores = Store.all
+    @stores = current_user.stores
     @markers = @stores.geocoded.map do |store|
       {
         lat: store.latitude,
@@ -36,6 +41,8 @@ class StoresController < ApplicationController
   end
 
   def update
+    @store = Store.find(params[:id])
+    authorize @store
     if @store.update(store_params)
       redirect_to store_path(@store), notice: 'Item was successfully updated.'
     else
@@ -44,7 +51,7 @@ class StoresController < ApplicationController
   end
 
   def create
-    @store = Store.new(store_params)
+    @store = current_user.stores.build(store_params)
     if @store.save
       redirect_to store_path(@store)
     else

@@ -1,6 +1,12 @@
-<div class="bg-slate-50 text-green-800 px-3 py-1 rounded-lg drop-shadow-md text-center">
-  <ul>
-    <li class="font-semibold"><%= item.store.name %></li>
-    <li><%= item.name %> - <%= item.price %>€</li>
-  </ul>
+<div class="bg-white rounded-lg p-3 shadow-lg">
+  <div class="flex items-center justify-center">
+    <div class="w-6 h-6 bg-green-600 text-white rounded-full flex items-center justify-center font-semibold">
+      <%= item.price %>€
+    </div>
+  </div>
+  <div class="text-green-800 mt-2">
+    <h3 class="font-semibold"><%= item.name %></h3>
+    <p><%= item.store.name %></p>
+  </div>
+  <div class="marker-arrow"></div>
 </div>

@@ -6,7 +6,9 @@
       <div class="space-y-1">
         <div class="flex flex-row justify-between">
           <div class="text-2xl text-slate-900"><%= @store.name %></div>
-          <div><%= link_to "⚙️", edit_store_path(@store) %></div>
+          <% if policy(@store).edit? %>
+            <div><%= link_to "⚙️", edit_store_path(@store) %></div>
+          <% end %>
         </div>
         <div><%= @store.address %></div>
       </div>
@@ -40,28 +42,32 @@
       <% end %>
     </div>
 
-    <div class="bg-slate-100 p-4 mb-5">
-      <h2>Admin Page</h2>
-      <% if @all_items.present? %>
-        <ul>
-          <% @all_items.each do |item| %>
-            <li>
-              <%= item.name %> - <%= item.price %>€
-              <%= link_to "⚙️", edit_item_path(item), class:"bg-slate-200 p-1 rounded-md" %>
-              <%= link_to "🗑️", item_path(item), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class:"bg-slate-200 p-1 rounded-md" %>
-              <%= item.visible? ? "◉" : "◎" %>
-            </li>
-          <% end %>
-        </ul>
-      <% else %>
-        <p>No items available</p>
-      <% end %>
-    </div>
+    <% if policy(@store).edit? %>
+      <div class="bg-slate-100 p-4 mb-5">
+        <h2>Admin Page</h2>
+        <% if @all_items.present? %>
+          <ul>
+            <% @all_items.each do |item| %>
+              <li>
+                <%= item.name %> - <%= item.price %>€
+                <%= link_to "⚙️", edit_item_path(item), class:"bg-slate-200 p-1 rounded-md" %>
+                <%= link_to "🗑️", item_path(item), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class:"bg-slate-200 p-1 rounded-md" %>
+                <%= item.visible? ? "◉" : "◎" %>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p>No items available</p>
+        <% end %>
+      </div>
+    <% end %>
 
-    <div>
-      <%= link_to "Add Item", new_item_path(store_id: @store.id), class:"bg-green-600 p-2 rounded-md text-slate-100"%>
-      <%= link_to "Delete Store", store_path(@store), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class:"bg-green-600 p-2 rounded-md text-slate-100" %>
-      <%= link_to "Home", root_path, class:"bg-green-600 p-2 rounded-md text-slate-100" %>
+      <div>
+          <% if policy(@store).edit? %>
+            <%= link_to "Add Item", new_item_path(store_id: @store.id), class:"bg-green-600 p-2 rounded-md text-slate-100"%>
+            <%= link_to "Delete Store", store_path(@store), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class:"bg-green-600 p-2 rounded-md text-slate-100" %>
+          <% end %>
+        <%= link_to "Home", root_path, class:"bg-green-600 p-2 rounded-md text-slate-100" %>
+      </div>
     </div>
-  </div>
 </div>

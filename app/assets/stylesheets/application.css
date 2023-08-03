@@ -13,3 +13,12 @@
  *= require_tree .
  *= require_self
  */
+
+ .marker-arrow {
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 10px solid white;
+  margin: -1px auto 0;
+}

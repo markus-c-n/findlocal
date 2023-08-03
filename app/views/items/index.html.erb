@@ -8,21 +8,21 @@
     data-map-api-key-value="<%= ENV['MAPBOX_API_KEY'] %>">
   </div>
 
-  <div class="p-2 my-2 bg-green-200 rounded-md content-center flex justify-center">
+  <div class="p-2 my-2 bg-slate-100 shadow-md rounded-md content-center flex justify-center">
       <div class="flex flex-col">
         <%= form_with url: items_path, method: :get, class: "mb-1" do %>
           <%= text_field_tag :query,
                 params[:query],
-                class: "p-1 bg-slate-50 rounded-md w-max",
+                class: "p-1 bg-slate-50 shadow-lg rounded-md w-max",
                 placeholder: "Search for an item or category"
             %>
           <%= submit_tag "Search", name: "", class: "p-1 bg-slate-50 rounded-md text-slate-900 shadow-md" %>
         <% end %>
         <div class="flex flex-row">
           <p class="m-1 p-1">Popular categories:</p>
-          <div class="p-1 m-1 bg-slate-100 rounded-md">Sale</div>
-          <div class="p-1 m-1 bg-slate-100 rounded-md">Fair Trade</div>
-          <div class="p-1 m-1 bg-slate-100 rounded-md">Organic</div>
+          <% @categories.each do |category| %>
+              <%= link_to category, items_path(query: params[:query], category: category), class: "p-1 m-1 bg-slate-100 rounded-md" %>
+          <% end %>
         </div>
       </div>
   </div>
