@@ -17,7 +17,7 @@
   </div>
   <div>
     <%= form.label :categories %>
-    <%= form.text_field :categories %>
+    <%= form.select :categories, Item::CATEGORIES, { include_blank: true }, multiple: true %>
   </div>
   <div>
     <%= form.label :pictures %>

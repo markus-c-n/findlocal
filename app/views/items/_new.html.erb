@@ -19,6 +19,11 @@
     <%= form.text_area :description, class: "form-control" %>
   </div>
 
+  <div>
+    <%= form.label :categories %>
+    <%= form.select :categories, Item::CATEGORIES, { include_blank: true }, multiple: true %>
+  </div>
+
   <!-- Add other item attributes here as needed -->
 
   <%= form.hidden_field :store_id, value: params[:store_id] %>
