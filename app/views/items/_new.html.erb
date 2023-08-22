@@ -20,9 +20,16 @@
   </div>
 
   <div>
-    <%= form.label :categories %>
-    <%= form.select :categories, Item::CATEGORIES, { include_blank: true }, multiple: true %>
+    <%= form.label :main_category %>
+     <%= form.collection_select :main_category_id, MainCategory.all, :id, :name, { include_blank: true }, { data: { controller: "item-form", action: "change->item-form#updateSubCategories" } } %>
   </div>
+
+  <div>
+    <%= form.label :sub_category %>
+    <%= form.collection_select :sub_category, [], :id, :name, { include_blank: true }, {}, data: { target: "item-form.subCategory" } %>
+  </div>
+
+
 
   <!-- Add other item attributes here as needed -->
 

@@ -1,5 +1,11 @@
 class Item < ApplicationRecord
   belongs_to :store
+  belongs_to :main_category, class_name: 'Category', optional: true
+  belongs_to :sub_category, class_name: 'Category', optional: true
 
-  CATEGORIES = ["Fair trade", "Organic", "Sale", "New", "Drinks", "Gluten Free", "Alcohol", "Accessoires", "Furniture", "Decoration"]
+  validate :sub_category_belongs_to_main_category
+  def sub_category_belongs_to_main_category
+    return if main_category.blank? || sub_category.blank?
+    errors.add(:sub_category, "must belong to the selected main category") unless sub_category.main_category == main_category
+  end
 end

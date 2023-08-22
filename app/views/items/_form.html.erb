@@ -16,10 +16,6 @@
     <%= form.text_area :description %>
   </div>
   <div>
-    <%= form.label :categories %>
-    <%= form.select :categories, Item::CATEGORIES, { include_blank: true }, multiple: true %>
-  </div>
-  <div>
     <%= form.label :pictures %>
     <%= form.text_field :pictures %>
   </div>
@@ -27,6 +23,17 @@
     <%= form.label :visible %>
     <%= form.check_box :visible %>
   </div>
+
+  <div>
+    <%= form.label :main_category %>
+    <%= form.collection_select :main_category, MainCategory.all, :id, :name, { include_blank: true } %>
+  </div>
+
+  <div>
+    <%= form.label :sub_category %>
+    <%= form.collection_select :sub_category, SubCategory.where(parent_id: @item.main_category), :id, :name, { include_blank: true } %>
+  </div>
+
   <div>
     <%= form.submit %>
   </div>

@@ -10,9 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_03_120116) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_22_124152) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "categories", force: :cascade do |t|
+    t.string "name"
+    t.integer "parent_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["parent_id"], name: "index_categories_on_parent_id"
+  end
 
   create_table "items", force: :cascade do |t|
     t.string "name"
@@ -30,6 +38,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_120116) do
     t.index ["store_id"], name: "index_items_on_store_id"
   end
 
+  create_table "main_categories", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "stores", force: :cascade do |t|
     t.string "name"
     t.string "address"
@@ -41,6 +55,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_120116) do
     t.float "longitude"
     t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_stores_on_user_id"
+  end
+
+  create_table "sub_categories", force: :cascade do |t|
+    t.string "name"
+    t.integer "parent_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|

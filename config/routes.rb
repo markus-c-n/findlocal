@@ -12,4 +12,7 @@ Rails.application.routes.draw do
   resources :stores do
     resources :items, only: [:new, :create]
   end
+  resources :categories do
+    get 'sub_categories', on: :member
+  end
 end
