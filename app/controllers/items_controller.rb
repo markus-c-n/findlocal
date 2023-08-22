@@ -1,4 +1,6 @@
 # app/controllers/items_controller.rb
+require 'csv'
+
 class ItemsController < ApplicationController
   before_action :find_item, only: [:edit, :update, :destroy]
 
@@ -37,7 +39,22 @@ class ItemsController < ApplicationController
     end
   end
 
+  def import_csv
+    csv_file = params[:csv_file]
 
+    if csv_file.present?
+      csv_data = csv_file.read
+      CSV.parse(csv_data, headers: true) do |row|
+        item_params = row.to_hash
+        @item = Item.new(item_params)
+        @item.store = current_user.stores[0] # Set the store based on the current user
+        @item.save
+      end
+      redirect_to store_path(current_user.stores[0]), notice: 'CSV import successful.'
+    else
+      redirect_to store_path(current_user.store[0]), alert: 'Please select a CSV file.'
+    end
+  end
 
   def new
     @item = Item.new

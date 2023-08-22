@@ -4,7 +4,11 @@ Rails.application.routes.draw do
 
   root to: 'items#index'
 
-  resources :items
+  resources :items do
+    collection do
+      post :import_csv
+    end
+  end
   resources :stores do
     resources :items, only: [:new, :create]
   end

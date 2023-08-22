@@ -2,7 +2,7 @@
 <div class="py-10 px-20">
   <div class="flex flex-row gap-2">
 
-    <div class="py-4 mb-5 w-2/4 flex flex-col justify-between">
+    <div class="py-4 mb-5 w-2/4 flex flex-col justify-between bg-white rounded-lg shadow-md p-6">
       <div class="space-y-1">
         <div class="flex flex-row justify-between">
           <div class="text-2xl text-slate-900"><%= @store.name %></div>
@@ -16,7 +16,7 @@
         <p class="font-semibold">Opening times:</p>
           <p><%= @store.opening_times %></p>
       </div>
-      <div class="bg-slate-100 text-green-700 font-light p-2 rounded-lg"><%= @store.description %></div>
+      <div class=""><%= @store.description %></div>
     </div>
 
     <div class="mb-5" style="width: 50%; height: 250px;"
@@ -26,48 +26,90 @@
     </div>
   </div>
 
-  <div>
-    <div class="bg-slate-100 p-4 mb-5">
-      <p class="">Items</p>
-      <% if @items.present? %>
-        <ul>
-          <% @items.each do |item| %>
-            <li>
-              <%= item.name %> - <%= item.price %>€
-            </li>
-          <% end %>
-        </ul>
+  <div class="bg-slate-100 p-4 mb-5 bg-white rounded-lg shadow-md p-6" data-target="store-show.publicList">
+    <p class="font-semibold">Currently in store:</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <% if @all_items.present? %>
+        <% @all_items.each do |item| %>
+          <div class="bg-white rounded-lg shadow-md p-4">
+            <p class="font-semibold"><%= item.name %></p>
+            <p class="text-gray-600"><%= item.description %></p>
+            <p><%= item.price %>€</p>
+            <p>Stock Quantity: <%= item.stock_quantity %></p>
+          </div>
+        <% end %>
       <% else %>
         <p>No items available</p>
       <% end %>
     </div>
+  </div>
 
     <% if policy(@store).edit? %>
-      <div class="bg-slate-100 p-4 mb-5">
-        <h2>Admin Page</h2>
+      <div class="">
         <% if @all_items.present? %>
-          <ul>
-            <% @all_items.each do |item| %>
-              <li>
-                <%= item.name %> - <%= item.price %>€
-                <%= link_to "⚙️", edit_item_path(item), class:"bg-slate-200 p-1 rounded-md" %>
-                <%= link_to "🗑️", item_path(item), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class:"bg-slate-200 p-1 rounded-md" %>
-                <%= item.visible? ? "◉" : "◎" %>
-              </li>
+          <div data-controller="store-show">
+            <% if @store.user == current_user %>
+              <div>
+                <button data-action="click->store-show#showAdminList" class="bg-blue-600 p-2 rounded-md text-white">Admin</button>
+                <button data-action="click->store-show#showPublicList" class="bg-green-600 p-2 rounded-md text-white">Preview</button>
+              </div>
             <% end %>
-          </ul>
+            <div class="bg-slate-100 p-4 mb-5 bg-white rounded-lg shadow-md p-6" data-target="store-show.adminList">
+              <table class="w-full">
+                <thead>
+                  <tr>
+                    <th class="py-2 px-4">Visibility</th>
+                    <th class="py-2 px-4">Name</th>
+                    <th class="py-2 px-4">Price</th>
+                    <th class="py-2 px-4">Description</th>
+                    <th class="py-2 px-4">Stock Quantity</th>
+                    <th class="py-2 px-4">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @all_items.each do |item| %>
+                    <tr>
+                      <td class="py-2 px-4"><%= item.visible? ? "◉" : "◎" %></td>
+                      <td class="py-2 px-4"><%= item.name %></td>
+                      <td class="py-2 px-4"><%= item.price %>€</td>
+                      <td class="py-2 px-4"><%= item.description %></td>
+                      <td class="py-2 px-4"><%= item.stock_quantity %></td>
+                      <td class="py-2 px-4 flex gap-2">
+                        <%= link_to "⚙️", edit_item_path(item), class: "bg-slate-200 p-1 rounded-md" %>
+                        <%= link_to "🗑️", item_path(item), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "bg-slate-200 p-1 rounded-md" %>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+              <div class="mt-5">
+                <h2>CSV Import</h2>
+                <%= render partial: 'items/csv_import_form' %>
+              </div>
+            </div>
+            <div class="bg-slate-100 p-4 mb-5 bg-white rounded-lg shadow-md p-6" data-target="store-show.publicList" style="display: none;">
+              <ul>
+                <% @items.each do |item| %>
+                  <li>
+                    <%= item.name %> - <%= item.price %>€
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
         <% else %>
           <p>No items available</p>
         <% end %>
       </div>
     <% end %>
 
-      <div>
-          <% if policy(@store).edit? %>
-            <%= link_to "Add Item", new_item_path(store_id: @store.id), class:"bg-green-600 p-2 rounded-md text-slate-100"%>
-            <%= link_to "Delete Store", store_path(@store), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class:"bg-green-600 p-2 rounded-md text-slate-100" %>
-          <% end %>
-        <%= link_to "Home", root_path, class:"bg-green-600 p-2 rounded-md text-slate-100" %>
-      </div>
+    <div>
+      <% if policy(@store).edit? %>
+        <%= link_to "Add Item", new_item_path(store_id: @store.id), class: "bg-green-600 p-2 rounded-md text-white" %>
+        <%= link_to "Delete Store", store_path(@store), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "bg-red-600 p-2 rounded-md text-white" %>
+      <% end %>
+      <%= link_to "Home", root_path, class: "bg-green-600 p-2 rounded-md text-white" %>
     </div>
+  </div>
 </div>
