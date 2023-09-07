@@ -52,7 +52,7 @@ class ItemsController < ApplicationController
       end
       redirect_to store_path(current_user.stores[0]), notice: 'CSV import successful.'
     else
-      redirect_to store_path(current_user.store[0]), alert: 'Please select a CSV file.'
+      redirect_to store_path(current_user.stores[0]), alert: 'Please select a CSV file.'
     end
   end
 
