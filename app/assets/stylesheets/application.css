@@ -22,3 +22,8 @@
   border-top: 10px solid white;
   margin: -1px auto 0;
 }
+
+.active {
+  color: orange; /* Text color when active */
+  font-weight: bold;
+}

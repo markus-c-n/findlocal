@@ -1,11 +1,11 @@
 <!-- app/views/items/_csv_import_form.html.erb -->
 <%= form_with(url: import_csv_items_path, method: :post, multipart: true) do |form| %>
-  <div class="flex flex-row">
-    <div>
-      <%= form.submit "Import CSV", class: "bg-green-600 p-2 rounded-md text-slate-100" %>
-    </div>
+  <div class="">
     <div class="mb-4">
       <%= form.file_field :csv_file, accept: '.csv' %>
+    </div>
+    <div>
+      <%= form.submit "Import CSV", class: "bg-green-600 p-2 rounded-md text-slate-100" %>
     </div>
   </div>
 <% end %>
