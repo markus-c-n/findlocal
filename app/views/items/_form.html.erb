@@ -25,6 +25,11 @@
   </div>
 
   <div>
+    <%= form.label :photo %>
+    <%= form.file_field :photo, class: "form-control" %>
+  </div>
+
+  <div>
     <%= form.label :main_category %>
     <%= form.collection_select :main_category, MainCategory.all, :id, :name, { include_blank: true } %>
   </div>

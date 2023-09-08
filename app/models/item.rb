@@ -1,4 +1,5 @@
 class Item < ApplicationRecord
+  has_one_attached :photo
   belongs_to :store
   belongs_to :main_category, class_name: 'Category', optional: true
   belongs_to :sub_category, class_name: 'Category', optional: true

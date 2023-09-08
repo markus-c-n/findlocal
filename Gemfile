@@ -60,6 +60,9 @@ gem 'devise'
 # authorization
 gem 'pundit'
 
+# images
+gem "cloudinary"
+
 
 
 group :development, :test do

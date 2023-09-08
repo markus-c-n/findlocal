@@ -10,6 +10,11 @@
             <div><%= link_to "⚙️", edit_store_path(@store) %></div>
           <% end %>
         </div>
+          <% if @store.photo.attached? %>
+            <div><%= cl_image_tag @store.photo.key, height: 150, width: 200, crop: :fill %></div>
+          <% else %>
+            <%= image_tag("logos/empty.svg", class: "h-8 mr-3", alt: "icon") %>
+          <% end %>
         <div><%= @store.address %></div>
       </div>
       <div>
@@ -19,39 +24,53 @@
       <div class=""><%= @store.description %></div>
     </div>
 
-    <div class="mb-5" style="width: 50%; height: 250px;"
+    <div class="mb-5 rounded-md" style="width: 50%; height: max; z-index: 1;"
       data-controller="map"
       data-map-markers-value="<%= @markers.to_json %>"
       data-map-api-key-value="<%= ENV['MAPBOX_API_KEY'] %>">
     </div>
   </div>
 
-  <div class="bg-slate-100 p-4 mb-5 bg-white rounded-lg shadow-md p-6" data-target="store-show.publicList">
-    <p class="font-semibold">Currently in store:</p>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <% if @all_items.present? %>
-        <% @all_items.each do |item| %>
-          <div class="bg-white rounded-lg shadow-md p-4">
-            <p class="font-semibold"><%= item.name %></p>
-            <p class="text-gray-600"><%= item.description %></p>
-            <p><%= item.price %>€</p>
-            <p>Stock Quantity: <%= item.stock_quantity %></p>
-          </div>
-        <% end %>
-      <% else %>
-        <p>No items available</p>
-      <% end %>
-    </div>
-  </div>
-
-    <% if policy(@store).edit? %>
-      <div class="">
+  <div data-controller="store-show">
+    <div class="bg-slate-100 p-4 mb-5 bg-white rounded-lg shadow-md p-6" data-target="store-show.publicList">
+      <p class="font-semibold">Currently in store:</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <% if @all_items.present? %>
-          <div data-controller="store-show">
+          <% @all_items.each do |item| %>
+            <div class="bg-white rounded-lg shadow-md p-4">
+              <div class="flex justify-between">
+                <div class="font-semibold"><%= item.name %></div>
+                <div><%= number_to_currency(item.price, unit: "€", precision: 2) %></div>
+              </div>
+              <% if item.photo.attached? %>
+                <div class="flex items-center justify-center pt-1">
+                  <div><%= cl_image_tag item.photo.key, height: 100, width: 80, crop: :fill %></div>
+                </div>
+              <% end %>
+              <p class="text-gray-600"><%= item.description %></p>
+              <p>Stock Quantity: <%= item.stock_quantity %></p>
+            </div>
+          <% end %>
+        <% else %>
+          <p>No items available</p>
+        <% end %>
+      </div>
+    </div>
+    <% if policy(@store).edit? %>
+      <div>
+        <% if @all_items.present? %>
             <% if @store.user == current_user %>
-              <div>
-                <button data-action="click->store-show#showAdminList" class="bg-blue-600 p-2 rounded-md text-white">Admin</button>
-                <button data-action="click->store-show#showPublicList" class="bg-green-600 p-2 rounded-md text-white">Preview</button>
+              <div class="flex justify-between">
+                <div>
+                  <button data-action="click->store-show#showAdminList" class="bg-blue-600 p-2 rounded-md text-white">Admin</button>
+                  <button data-action="click->store-show#showPublicList" class="bg-green-600 p-2 rounded-md text-white">Preview</button>
+                </div>
+                <div class="flex flex-row">
+                  <div><%= link_to "Add Item", new_item_path(store_id: @store.id), class: "bg-green-600 p-2 rounded-md text-white" %></div>
+                  <div class="mt-5">
+                    <%= render partial: 'items/csv_import_form' %>
+                  </div>
+                </div>
               </div>
             <% end %>
             <div class="bg-slate-100 p-4 mb-5 bg-white rounded-lg shadow-md p-6" data-target="store-show.adminList">
@@ -59,6 +78,7 @@
                 <thead>
                   <tr>
                     <th class="py-2 px-4">Visibility</th>
+                    <th class="py-2 px-4">Photo</th>
                     <th class="py-2 px-4">Name</th>
                     <th class="py-2 px-4">Price</th>
                     <th class="py-2 px-4">Description</th>
@@ -69,11 +89,17 @@
                 <tbody>
                   <% @all_items.each do |item| %>
                     <tr>
-                      <td class="py-2 px-4"><%= item.visible? ? "◉" : "◎" %></td>
+                      <td class="py-2 px-4 text-center"><%= item.visible? ? "◉" : "◎" %></td>
+                      <td class="py-2 px-4">
+                        <% if item.photo.attached? %>
+                          <%= cl_image_tag item.photo.key, height: 50, width: 50, crop: :fill %>
+                        <% else %>
+                          <%= image_tag("logos/empty.svg", class: "h-8 mr-3", alt: "icon") %>
+                        <% end %></td>
                       <td class="py-2 px-4"><%= item.name %></td>
-                      <td class="py-2 px-4"><%= item.price %>€</td>
+                      <td class="py-2 px-4 text-center"><%= number_to_currency(item.price, unit: "€", precision: 2) %></td>
                       <td class="py-2 px-4"><%= item.description %></td>
-                      <td class="py-2 px-4"><%= item.stock_quantity %></td>
+                      <td class="py-2 px-4 text-center"><%= item.stock_quantity %></td>
                       <td class="py-2 px-4 flex gap-2">
                         <%= link_to "⚙️", edit_item_path(item), class: "bg-slate-200 p-1 rounded-md" %>
                         <%= link_to "🗑️", item_path(item), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "bg-slate-200 p-1 rounded-md" %>
@@ -83,16 +109,13 @@
                 </tbody>
               </table>
             </div>
-              <div class="mt-5">
-                <h2>CSV Import</h2>
-                <%= render partial: 'items/csv_import_form' %>
-              </div>
+
             </div>
             <div class="bg-slate-100 p-4 mb-5 bg-white rounded-lg shadow-md p-6" data-target="store-show.publicList" style="display: none;">
               <ul>
                 <% @items.each do |item| %>
                   <li>
-                    <%= item.name %> - <%= item.price %>€
+                    <%= item.name %> - <%= number_to_currency(item.price, unit: "€", precision: 2) %>€
                   </li>
                 <% end %>
               </ul>
@@ -106,7 +129,6 @@
 
     <div>
       <% if policy(@store).edit? %>
-        <%= link_to "Add Item", new_item_path(store_id: @store.id), class: "bg-green-600 p-2 rounded-md text-white" %>
         <%= link_to "Delete Store", store_path(@store), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "bg-red-600 p-2 rounded-md text-white" %>
       <% end %>
       <%= link_to "Home", root_path, class: "bg-green-600 p-2 rounded-md text-white" %>

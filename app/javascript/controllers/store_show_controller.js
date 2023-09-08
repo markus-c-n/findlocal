@@ -6,6 +6,7 @@ export default class extends Controller {
 
   connect() {
     // Show the admin list by default
+    console.log("store-show controller connected")
     this.showAdminList()
   }
 

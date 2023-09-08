@@ -2,9 +2,10 @@
   <ul>
     <li class="text-xl"><%= link_to store.name, store_path(item.store) %></li>
     <li><%= store.address %></li><hr>
-    <li class="text-lg"><%= item.name %> | <%= item.price %>€</li>
+    <li class="text-lg"><%= item.name %> | <%= number_to_currency(item.price, unit: "€", precision: 2) %></li>
     <li><%= item.description %></li>
     <li><%= item.stock_quantity%></li>
+    <li><%= cl_image_tag item.photo.key, height: 50, width: 40, crop: :fill %></li>
     <li class="text-slate-50 bg-green-500 w-fit px-1 rounded-md mb-1"><%= item.categories %></li><hr>
     <li>Similar items:
     <ul>

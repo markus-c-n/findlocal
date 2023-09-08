@@ -1,5 +1,5 @@
 <div class="info-window">
-  <p class="font-semibold"><%= store.name %></p>
+  <p class="font-semibold"><%= link_to store.name, store_path(store) %></p>
   <p><%= store.opening_times %></p>
   <p><%= store.description %></p>
   <p><%= store.address %></p>
