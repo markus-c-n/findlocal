@@ -7,7 +7,7 @@ class ItemsController < ApplicationController
   def index
     @items = Item.where(visible: true).includes(store: :items).order("RANDOM()").limit(10)
     @categories = Item.distinct.pluck(:categories).compact.uniq
-
+    @location = request.location.city
     if params[:query].present?
       search_query = "%#{params[:query]}%"
       @items = @items.joins(:store).where("items.name ILIKE :query OR :query = ANY(items.categories) OR items.description ILIKE :query", query: search_query)
@@ -25,10 +25,10 @@ class ItemsController < ApplicationController
 
     @markers = @items.flat_map do |item|
       marker_html = if params[:query].present?
-        render_to_string(partial: "marker", locals: { item: item })
-      else
-        render_to_string(partial: "marker_store", locals: { item: item })
-      end
+                      render_to_string(partial: "marker", locals: { item: item })
+                    else
+                      render_to_string(partial: "marker_store", locals: { item: item })
+                    end
 
       {
         lat: item.store.latitude,

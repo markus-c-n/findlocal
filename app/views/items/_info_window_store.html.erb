@@ -1,7 +1,27 @@
-<div class="info-window">
-  <p class="font-semibold"><%= link_to store.name, store_path(store) %></p>
-  <p><%= store.opening_times %></p>
-  <p><%= store.description %></p>
-  <p><%= store.address %></p>
-  <!-- Add other store details as needed -->
+<div class="info-window px-1 rounded-md text-slate-900">
+  <ul>
+    <li>
+      <div class="flex flex-row justify-between">
+        <div class="text-lg text-orange-400 hover:text-orange-600 focus:outline-none no-underline"><%= link_to store.name, store_path(store) %></div>
+        <div><%= store.opening_times %></div>
+      </div>
+    </li>
+    <li><p><%= store.address%></p></li>
+    <li><%= store.description %></li>
+    <div class="py-2 flex justify-center items-center">
+      <li>
+        <% if store.photo.attached? %>
+          <%= cl_image_tag store.photo.key, height: 50, width: 40, crop: :fill %>
+        <% else %>
+          <%= image_tag("logos/empty.svg", class: "h-8 mr-3", alt: "icon") %>
+        <% end %>
+      </li>
+    </div>
+
+    <div class="flex flex-row">
+      <% store.items.sample(3).each do |item| %>
+        <div class="flex-1 py-1 px-2 mx-1 bg-slate-50 text-slate-900 rounded-md shadow-md hover:bg-orange-400 hover:text-slate-50 hover:shadow-none"><p><%= item.name %></p></div>
+      <% end %>
+    </div>
+  </ul>
 </div>

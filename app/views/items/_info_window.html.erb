@@ -1,14 +1,38 @@
-<div class="px-1 rounded-md text-lime-700">
+<div class="px-1 rounded-md text-slate-900">
   <ul>
-    <li class="text-xl"><%= link_to store.name, store_path(item.store) %></li>
-    <li><%= store.address %></li><hr>
-    <li class="text-lg"><%= item.name %> | <%= number_to_currency(item.price, unit: "€", precision: 2) %></li>
-    <li><%= item.description %></li>
-    <li><%= item.stock_quantity%></li>
-    <li><%= cl_image_tag item.photo.key, height: 50, width: 40, crop: :fill %></li>
-    <li class="text-slate-50 bg-green-500 w-fit px-1 rounded-md mb-1"><%= item.categories %></li><hr>
-    <li>Similar items:
-    <ul>
-    <li><%= item.store.items.first.name %></li></ul></li>
+    <li>
+      <div class="flex flex-row justify-between text-lg">
+        <div><%= item.name %></div>
+        <div><%= number_to_currency(item.price, unit: "€", precision: 2) %></div>
+      </div>
+    </li>
+    <div class="flex flex-row justify-between">
+      <li><%= item.description %></li>
+      <li><p><%= item.stock_quantity%> x left.</p></li>
+    </div>
+    <div class="py-2 flex justify-center items-center">
+      <li>
+        <% if item.photo.attached? %>
+          <%= cl_image_tag item.photo.key, height: 50, width: 40, crop: :fill %>
+        <% else %>
+          <%= image_tag("logos/empty.svg", class: "h-8 mr-3", alt: "icon") %>
+        <% end %>
+      </li>
+    </div>
+
+    <div class="flex flex-row">
+      <li class="text-slate-50 bg-orange-400 w-fit px-1 rounded-md mb-1"><%= item.categories if item.categories.any?%></li>
+    </div>
+
+    <%= link_to store_path(item.store), class:"focus:outline-none no-underline" do %>
+      <div class="bg-slate-50 rounded-lg p-3 shadow-lg hover:bg-orange-400 hover:text-slate-50 hover:shadow-none">
+        <div class="flex flex-col justify-center items-center">
+          <li class="text-lg"><%= store.name %></li>
+        </div>
+        <li><%= store.address %></li>
+        <li><%= store.opening_times %></li>
+      </div>
+   <% end %>
+
   </ul>
 </div>

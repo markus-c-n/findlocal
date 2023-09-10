@@ -1,12 +1,7 @@
 <div class="bg-white rounded-lg p-3 shadow-lg">
-  <div class="flex items-center justify-center">
-    <div class="w-6 h-6 bg-green-600 text-white rounded-full flex items-center justify-center font-semibold">
-      <%= number_to_currency(item.price, unit: "€", precision: 2) %>
-    </div>
-  </div>
-  <div class="text-green-800 mt-2">
-    <h3 class="font-semibold"><%= item.name %></h3>
-    <p><%= item.store.name %></p>
-  </div>
-  <div class="marker-arrow"></div>
+    <p class="font-semibold"><%= item.name %></p>
+    <%= number_to_currency(item.price, unit: "€", precision: 2) %>
+</div>
+<div class="flex items-center justify-center">
+  <div><%= image_tag("logos/marker-black.svg", class: "h-8 mr-3", alt: "icon") %></div>
 </div>
